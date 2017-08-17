@@ -53,7 +53,7 @@
 </head>
 <body id="body">
     <div class="container">
-    <h1><img src="ideesculture.png" style="height: 48px;"/> <small>Analyse de données</small> <?php print $filename; ?></h1>
+    <h1><img src="ideesculture.png" style="height: 48px;"/> <small>Analyse de données</small> <?php print basename($filename); ?></h1>
     <a  href='index.php' class="btn btn-primary">Retour à la page d'accueil</a>
     <h3>Rapport d'analyses de données idéesculture</h3>
     <p><i>Seule la feuille 1 est analysée, la première ligne contient les entêtes de colonne.</i></p>

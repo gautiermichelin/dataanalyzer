@@ -52,17 +52,34 @@
         <h1>Ensemble des fichiers disponibles</h1>
         <ul class="list-unstyled">
             <?php
+                //
+                $previous = '.';
+
                 foreach ($files as $key => $file) {
+
+                    $fileDir = dirname($file);
                     $filename = basename($file);
-                    echo '<li>';
-                    echo '<a href="analyze.php?file='.$file.'">'.$filename.'</a>';
-                    echo '</li>';
+
+                    // Check if in the same file
+                    if($previous == $fileDir) {
+                        echo '<li>';
+                        echo '<a href="analyze.php?file='.$file.'">'.$filename.'</a>';
+                        echo '</li>';
+                    } else  if ($previous != $fileDir){
+                        // End the previous list
+                        echo '</ul>';
+                        // Create a new one
+                        echo '<ul>';
+                        echo '<h1><small>'.$fileDir.'</small></h1>';
+                        echo '<li>';
+                        echo '<a href="analyze.php?file='.$file.'">'.$filename.'</a>';
+                        echo '</li>';
+                        $previous = $fileDir;
+                    }
+
                 }
             ?>
         </ul>
     </div>
-
-
-	
 </body>
 </html>
