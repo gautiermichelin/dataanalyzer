@@ -2,10 +2,8 @@
     include_once("vendor/autoload.php");
     error_reporting(E_ERROR);
 
-
     $base_directory = 'donnees';
     $files = traverse_hierarchy($base_directory);
-
 
     function traverse_hierarchy($path)
     {
@@ -17,7 +15,7 @@
             $fullpath = $path . '/' . $file;
             if(is_dir($fullpath))
                 $return_array = array_merge($return_array, traverse_hierarchy($fullpath));
-            else // your if goes here: if(substr($file, -3) == "jpg") or something like that
+            else 
                 $return_array[] = $fullpath;
         }
         return $return_array;
@@ -48,16 +46,21 @@
     <title>IdéesCulture - DataAnalyzer</title>
 </head>
 <body>
-    
-    <ul class="list-unstyled">
-        <?php
-            foreach ($files as $key => $file) {
-                echo '<li>';
-                echo '<a href="analyze.php?file='.$file.'">'.$file.'</a>';
-                echo '</li>';
-            }
-        ?>
-    </ul>
+        
+
+    <div class="container">
+        <h1>Ensemble des fichiers disponibles</h1>
+        <ul class="list-unstyled">
+            <?php
+                foreach ($files as $key => $file) {
+                    $filename = basename($file);
+                    echo '<li>';
+                    echo '<a href="analyze.php?file='.$file.'">'.$filename.'</a>';
+                    echo '</li>';
+                }
+            ?>
+        </ul>
+    </div>
 
 
 	
