@@ -3,9 +3,12 @@
 	$id    = $_POST['id'];
 	$state = $_POST['state'];
 
-	$json  	     = json_decode(file_get_contents($file),TRUE);
-	$json[$user] = array("id" => $state, "last" => $state);
+	$json  	     = json_decode(file_get_contents($file),  TRUE);
+	$json[$id] 	 = array("state" => $state);
+
+
 	file_put_contents($file, json_encode($json));
 
+	var_dump($json);
 	echo "Done";
 ?>
