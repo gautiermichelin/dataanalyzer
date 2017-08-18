@@ -41,14 +41,13 @@
 
             foreach ($json as $key_json => $value) {
                 // If file has a state
-                if($key_json == $key) {
+                if($key_json == $file) {
                     $state = $value['state'];
                 } 
             }
 
             $json_data = array("name"=>$file, "state"=>$state);
-            $line      = json_encode($json_data);
-            echo $line;       
+            $line      = json_encode($json_data);    
             array_push($array, $line); 
         }
 
@@ -100,7 +99,6 @@
                     $file  = $fileDescriptor->name;
                     $state = $fileDescriptor->state;
                     $fileDir  = dirname($file);
-                    echo $file;
 
                     // Check if in the same directory
                     if($previous == $fileDir) {
