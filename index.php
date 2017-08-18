@@ -31,35 +31,28 @@
     *   Get all the sates of the files
     **/
     function compare_to_json($json_file, $array_filename) {
-        $json = json_decode(file_get_contents($json_file),  TRUE);
-        $json_filenames = [];
-        $array = [];
 
-        foreach ($json as $key => $value) {
-            array_push($json_filenames, $key);
-        }
+        $json = json_decode(file_get_contents($json_file),  TRUE);
+        $array = [];
 
         // Not good
         foreach ($array_filename as $key => $file) {
+            $state = '-';
 
-            if(in_array($key, $json_filenames)) {
-                $state;
-                foreach ($json as $key_json => $value) {
-                    if($key_json == $key) {
-                         $state = $value['state'];
-                         break;
-                    }
-                }
-                
-                $json_data = array("name"=>$file, "state"=>$state);
-                $line      = json_encode($json_data);
-                array_push($array, $line);
-            } else {
-                $json_data = array("name"=>$file, "state"=>'-');
-                $line      = json_encode($json_data);
-                array_push($array, $line);
+            foreach ($json as $key_json => $value) {
+                // If file has a state
+                if($key_json == $key) {
+                    $state = $value['state'];
+                } 
             }
+
+            $json_data = array("name"=>$file, "state"=>$state);
+            $line      = json_encode($json_data);
+            echo $line;       
+            array_push($array, $line); 
         }
+
+
         return $array;
     }   
 
@@ -103,10 +96,11 @@
 
                 foreach ($states as $key => $fileDescriptor) {
                     $fileDescriptor = json_decode($fileDescriptor);
+
                     $file  = $fileDescriptor->name;
                     $state = $fileDescriptor->state;
-                    echo $state;
                     $fileDir  = dirname($file);
+                    echo $file;
 
                     // Check if in the same directory
                     if($previous == $fileDir) {
@@ -160,8 +154,8 @@
         $('select').on('change', function() {
             var id = $(this).attr('id');
 
-            console.log('id');
-            $.post( "save.php", { id: this.id, state: this.value}); 
+            console.log(id);
+            $.post( "save.php", { id: id, state: this.value}); 
         });
     </script>
 </body>
