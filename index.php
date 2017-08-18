@@ -121,8 +121,12 @@
                     }
                 }
 
-<<<<<<< HEAD
                 function displayFile($file, $index, $state) {
+
+                    $path_parts = pathinfo($file);
+                    if($path_parts['extension'] == 'xlsx') {
+                        $filename = basename($file);
+
                     $filename = basename($file);
 
                     echo '<li class="list-group-item">';
@@ -130,20 +134,8 @@
                     echo $index.'-';
                     echo '<a href="analyze.php?file='.$file.'">'.$filename.'</a>';
                     echo '<input type="hidden" name="filename" value="'.$file.'">';
-                    echo '<select class="selectpicker show-menu-arrow pull-right state" data-style="btn-primary" data-width="150px" id="'.$file.'" title="'.$state.'">
+                    echo '<select class="selectpicker show-menu-arrow pull-right state" data-style="btn-primary" data-width="150px" title="'.$state.'">
                             <option data-icon="glyphicon glyphicon-ok-circle">-</option>
-=======
-                function displayFile($file) {
-                    // Reject non xlsx file
-                    $path_parts = pathinfo($file);
-                    if($path_parts['extension'] == 'xlsx') {
-                        $filename = basename($file);
-
-                        echo '<li class="list-group-item">';
-                        echo '<form>';
-                        echo '<a href="analyze.php?file='.$file.'">'.$filename.'</a>';
-                        echo '<select class="selectpicker show-menu-arrow pull-right " data-style="btn-primary" data-width="150px">
->>>>>>> 71eb1d1c07ed8976611b70854d6618bce35664e6
                             <option data-icon="glyphicon glyphicon-ok-circle">Ok</option>
                             <option data-icon="glyphicon-warning-sign">Warning</option>
                             <option data-icon="glyphicon-ban-circle">Stop</option>
