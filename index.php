@@ -133,9 +133,8 @@
                     echo '<form>';
                     echo $index.'-';
                     echo '<a href="analyze.php?file='.$file.'">'.$filename.'</a>';
-                    echo '<input type="hidden" name="filename" value="'.$file.'">';
-                    echo '<select class="selectpicker show-menu-arrow pull-right state" data-style="btn-primary" data-width="150px" title="'.$state.'">
-                            <option data-icon="glyphicon glyphicon-ok-circle">-</option>
+                    echo '<select class="selectpicker show-menu-arrow pull-right state" data-style="btn-primary" data-width="150px" title="'.$state.'" id="'.$file.'">
+                            <option>-</option>
                             <option data-icon="glyphicon glyphicon-ok-circle">Ok</option>
                             <option data-icon="glyphicon-warning-sign">Warning</option>
                             <option data-icon="glyphicon-ban-circle">Stop</option>
@@ -159,12 +158,11 @@
 
         $('select').on('change', function() {
             var id = $(this).attr('id');
-            $.post( "save.php", { id: id, state: this.value}); 
+
+            console.log('id');
+            $.post( "save.php", { id: this.id, state: this.value}); 
         });
     </script>
-
-
-
 </body>
 </html>
 
