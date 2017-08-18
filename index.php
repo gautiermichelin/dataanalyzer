@@ -15,7 +15,7 @@
             $fullpath = $path . '/' . $file;
             if(is_dir($fullpath))
                 $return_array = array_merge($return_array, traverse_hierarchy($fullpath));
-            else 
+            else
                 $return_array[] = $fullpath;
         }
         return $return_array;
@@ -63,7 +63,7 @@
 
                     $fileDir  = dirname($file);
 
-                    // Check if in the same file
+                    // Check if in the same directory
                     if($previous == $fileDir) {
                         $filename = basename($file);
                         displayFile($file);
@@ -78,20 +78,24 @@
                 }
 
                 function displayFile($file) {
-                    $filename = basename($file);
+                    // Reject non xlsx file
+                    $path_parts = pathinfo($file);
+                    if($path_parts['extension'] == 'xlsx') {
+                        $filename = basename($file);
 
 
-                    echo '<li class="list-group-item">';
-                    echo '<form>';
-                    echo '<a href="analyze.php?file='.$file.'">'.$filename.'</a>';
-                    echo '<select class="selectpicker show-menu-arrow pull-right " data-style="btn-primary" data-width="150px">
+                        echo '<li class="list-group-item">';
+                        echo '<form>';
+                        echo '<a href="analyze.php?file='.$file.'">'.$filename.'</a>';
+                        echo '<select class="selectpicker show-menu-arrow pull-right " data-style="btn-primary" data-width="150px">
                             <option data-icon="glyphicon glyphicon-ok-circle">Ok</option>
                             <option data-icon="glyphicon-warning-sign">Warning</option>
                             <option data-icon="glyphicon-ban-circle">Stop</option>
                         </select>';
-                    echo '</form>';
-                    echo '</li>';
-                } 
+                        echo '</form>';
+                        echo '</li>';
+                    }
+                }
             ?>
         </ul>
     </div>
