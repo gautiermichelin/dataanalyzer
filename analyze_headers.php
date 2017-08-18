@@ -1,6 +1,7 @@
 <?php
     include_once("vendor/autoload.php");
     error_reporting(E_ERROR);
+    ini_set(memory_limit, "512M");
 
     function makelink($text) {
         $text = preg_replace("#[[:punct:]]#", "", $text);
@@ -28,7 +29,26 @@
     }
 
     $resultat = traverse_hierarchy("donnees", array("xlsx"));
-    var_dump($resultat);
+    foreach($resultat as $filename) {
+        $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
+        $spreadsheet = $reader->load($filename);
+
+        $sheet = $spreadsheet->getSheet(0);
+        $sheet_array = $sheet->toArray();
+        //var_dump($sheet_array);
+        $headers = array_filter($sheet_array[0], function($value) {
+            return ($value !== null && $value !== "");
+        });
+
+        // No headers detected on first line, skipping...
+        if(!sizeof($headers)) {
+            continue;
+        }
+
+        $path_parts = pathinfo($filename);
+        file_put_contents($path_parts["dirname"]."/".$path_parts["filename"]."_headers.json", json_encode($headers));
+    }
+    var_dump($headers);die();
 
     /*$filename = $_GET['file']; //"FICHIER-LEQUIN-xls.xlsx";
 
