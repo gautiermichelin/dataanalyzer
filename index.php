@@ -84,7 +84,9 @@
                     echo '<li class="list-group-item">';
                     echo '<form>';
                     echo '<a href="analyze.php?file='.$file.'">'.$filename.'</a>';
-                    echo '<select class="selectpicker show-menu-arrow pull-right " data-style="btn-primary" data-width="150px">
+                    echo '<input type="hidden" name="filename" value="'.$file.'">';
+                    echo '<select class="selectpicker show-menu-arrow pull-right state" data-style="btn-primary" data-width="150px" id="'.$file.'">
+                            <option data-icon="glyphicon glyphicon-ok-circle">-</option>
                             <option data-icon="glyphicon glyphicon-ok-circle">Ok</option>
                             <option data-icon="glyphicon-warning-sign">Warning</option>
                             <option data-icon="glyphicon-ban-circle">Stop</option>
@@ -98,12 +100,24 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/bootstrap-select.min.js"></script>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/bootstrap-select.min.js"></script>f
     <script>
         $('.selectpicker').selectpicker({
           style: 'btn-primary',
-          size: 3
+          size: 4
+        });
+
+        $('select').on('change', function() {
+          var id = $(this).attr('id');
+
+          switch(this.value) {
+            case 'Ok':      $('.selectpicker').selectpicker.style = 'btn-danger';  break;
+            case 'Warning': $('.selectpicker').selectpicker.style = 'btn-primary'; break;
+            case 'Stop':    $('.selectpicker').selectpicker.style = 'btn-primary'; break;
+            default: console.log('Error');
+          }
+
+            $.post( "save.php", { id: id, state: this.value}); 
         });
     </script>
 
