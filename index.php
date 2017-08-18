@@ -5,8 +5,7 @@
     $base_directory = 'donnees';
     $files = traverse_hierarchy($base_directory);
 
-    function traverse_hierarchy($path)
-    {
+    function traverse_hierarchy($path) {
         $return_array = array();
         $dir = opendir($path);
         while(($file = readdir($dir)) !== false)
