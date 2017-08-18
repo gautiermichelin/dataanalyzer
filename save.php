@@ -1,5 +1,4 @@
 <?php
-
 	$file  = 'data.json';
 	$id    = $_POST['id'];
 	$state = $_POST['state'];

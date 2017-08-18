@@ -105,6 +105,7 @@
                     $fileDescriptor = json_decode($fileDescriptor);
                     $file  = $fileDescriptor->name;
                     $state = $fileDescriptor->state;
+                    echo $state;
                     $fileDir  = dirname($file);
 
                     // Check if in the same directory
