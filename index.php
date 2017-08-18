@@ -3,9 +3,16 @@
     error_reporting(E_ERROR);
 
     $base_directory = 'donnees';
-    $files = traverse_hierarchy($base_directory);
+    $data_file = 'data.json';
 
-    function traverse_hierarchy($path) {
+    $files          = traverse_hierarchy($base_directory);
+    $states         = compare_to_json($data_file, $files);
+
+    /***
+        Get all the files in the hierarchy
+    **/
+    function traverse_hierarchy($path)
+    {
         $return_array = array();
         $dir = opendir($path);
         while(($file = readdir($dir)) !== false)
@@ -19,6 +26,42 @@
         }
         return $return_array;
     }
+
+    /**
+    *   Get all the sates of the files
+    **/
+    function compare_to_json($json_file, $array_filename) {
+        $json = json_decode(file_get_contents($json_file),  TRUE);
+        $json_filenames = [];
+        $array = [];
+
+        foreach ($json as $key => $value) {
+            array_push($json_filenames, $key);
+        }
+
+        // Not good
+        foreach ($array_filename as $key => $file) {
+
+            if(in_array($key, $json_filenames)) {
+                $state;
+                foreach ($json as $key_json => $value) {
+                    if($key_json == $key) {
+                         $state = $value['state'];
+                         break;
+                    }
+                }
+                
+                $json_data = array("name"=>$file, "state"=>$state);
+                $line      = json_encode($json_data);
+                array_push($array, $line);
+            } else {
+                $json_data = array("name"=>$file, "state"=>'-');
+                $line      = json_encode($json_data);
+                array_push($array, $line);
+            }
+        }
+        return $array;
+    }   
 
 ?>
 
@@ -58,34 +101,41 @@
                 //
                 $previous = '.';
 
-                foreach ($files as $key => $file) {
-
+                foreach ($states as $key => $fileDescriptor) {
+                    $fileDescriptor = json_decode($fileDescriptor);
+                    $file  = $fileDescriptor->name;
+                    $state = $fileDescriptor->state;
                     $fileDir  = dirname($file);
 
                     // Check if in the same directory
                     if($previous == $fileDir) {
                         $filename = basename($file);
-                        displayFile($file);
+                        displayFile($file, $key, $state);
 
                     } else {
                         echo '</ul>';
                         echo '<ul class="list-unstyled list-group">';
                         echo '<h3><small>'.$fileDir.'</small></h3>';
-                        displayFile($file);
+                        displayFile($file, $key, $state);
                         $previous = $fileDir;
                     }
                 }
 
-                function displayFile($file) {
-                    // Reject non xlsx file
+                function displayFile($file, $index, $state) {
+
                     $path_parts = pathinfo($file);
                     if($path_parts['extension'] == 'xlsx') {
                         $filename = basename($file);
 
-                        echo '<li class="list-group-item">';
-                        echo '<form>';
-                        echo '<a href="analyze.php?file='.$file.'">'.$filename.'</a>';
-                        echo '<select class="selectpicker show-menu-arrow pull-right " data-style="btn-primary" data-width="150px">
+                    $filename = basename($file);
+
+                    echo '<li class="list-group-item">';
+                    echo '<form>';
+                    echo $index.'-';
+                    echo '<a href="analyze.php?file='.$file.'">'.$filename.'</a>';
+                    echo '<input type="hidden" name="filename" value="'.$file.'">';
+                    echo '<select class="selectpicker show-menu-arrow pull-right state" data-style="btn-primary" data-width="150px" title="'.$state.'">
+                            <option data-icon="glyphicon glyphicon-ok-circle">-</option>
                             <option data-icon="glyphicon glyphicon-ok-circle">Ok</option>
                             <option data-icon="glyphicon-warning-sign">Warning</option>
                             <option data-icon="glyphicon-ban-circle">Stop</option>
@@ -108,15 +158,7 @@
         });
 
         $('select').on('change', function() {
-          var id = $(this).attr('id');
-
-          switch(this.value) {
-            case 'Ok':      $('.selectpicker').selectpicker.style = 'btn-danger';  break;
-            case 'Warning': $('.selectpicker').selectpicker.style = 'btn-primary'; break;
-            case 'Stop':    $('.selectpicker').selectpicker.style = 'btn-primary'; break;
-            default: console.log('Error');
-          }
-
+            var id = $(this).attr('id');
             $.post( "save.php", { id: id, state: this.value}); 
         });
     </script>
