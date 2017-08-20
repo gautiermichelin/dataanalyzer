@@ -64,8 +64,11 @@
             ?>
             <li class="list-group-item">
             <form>
-                <a href="analyze.php?file=<?php print $file; ?>"><?php print $filename; ?></a>
-                <?php print $state; ?>
+                <?php if ($state =="A migrer" || $state == "En attente") : ?>
+                <a href="analyze.php?file=<?php print $file; ?>"><?php print $filename; ?> </a><span class="label label-info">Analyse disponible</span>
+                <?php else : ?>
+                    <?php print $filename; ?>
+                <?php endif; ?>
                 <select id="<?php print $uniqueId; ?>" class="selectpicker show-menu-arrow pull-right state" data-style="btn-primary" data-width="150px" data-file="<?php print $file; ?>">
                     <option>-</option>
                     <option data-icon="glyphicon glyphicon-ok-circle">A migrer</option>
@@ -120,6 +123,16 @@
         button span.filter-option.pull-left {
             color:white;
         }
+        li.a_migrer {
+            background-color:RGBA(22, 145, 105, 0.10);
+        }
+        li.en_attente {
+            background-color:RGBA(231, 122, 58, 0.20);
+        }
+        li.ne_pas_migrer {
+            background-color:RGBA(0, 0, 0, 0.10);
+            color:RGBA(0, 0, 0, 0.40);
+        }
     </style>
     <title>IdéesCulture - DataAnalyzer</title>
 </head>
@@ -127,7 +140,7 @@
 
     <div class="container">
         <h1><img src="ideesculture.png" style="height: 48px;"/> <small>Analyse de données</small></h1>
-        <h3>Ensemble des fichiers disponibles</h3>
+        <h3><button class="btn btn-default" onclick="location.reload();"><i class="glyphicon glyphicon-refresh"></i></button> Ensemble des fichiers disponibles</h3>
         <ul class="list-unstyled">
             <?php
                 //
@@ -151,9 +164,6 @@
                         echo '<ul class="list-unstyled list-group">';
                         echo '<h3><small>'.$fileDir.'</small></h3>';
                         displayFile($file, $state);?>
-                        <script>
-                            $("#<?php print $file; ?>").selectpicker("val","<?php print $state; ?>");
-                        </script>
                         <?php
                         $previous = $fileDir;
                         $index++;
@@ -170,6 +180,12 @@
             var file = $(this).attr('data-file');
             console.log(file);
             $.post( "save.php", { id: file, state: this.value});
+            console.log(this.id);
+            $('#'+this.id).parent().parent().parent()
+                .removeClass('a_migrer')
+                .removeClass('en_attente')
+                .removeClass('ne_pas_migrer')
+                .addClass(this.value.replace(/\s/g, '_').toLowerCase());
         });
     </script>
 </body>
