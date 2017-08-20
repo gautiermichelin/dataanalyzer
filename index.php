@@ -53,7 +53,30 @@
 
 
         return $array;
-    }   
+    }
+
+    function displayFile($file, $index, $state) {
+
+        $path_parts = pathinfo($file);
+        if($path_parts['extension'] == 'xlsx') {
+            $filename = basename($file);
+
+            $filename = basename($file);
+
+            echo '<li class="list-group-item">';
+            echo '<form>';
+            echo $index.'-';
+            echo '<a href="analyze.php?file='.$file.'">'.$filename.'</a>';
+            echo '<select class="selectpicker show-menu-arrow pull-right state" data-style="btn-primary" data-width="150px" title="'.$state.'" id="'.$file.'">
+                            <option>-</option>
+                            <option data-icon="glyphicon glyphicon-ok-circle">Ok</option>
+                            <option data-icon="glyphicon-warning-sign">Warning</option>
+                            <option data-icon="glyphicon-ban-circle">Stop</option>
+                        </select>';
+            echo '</form>';
+            echo '</li>';
+        }
+    }
 
 ?>
 
@@ -79,6 +102,9 @@
         }
         .space {
             color:transparent;
+        }
+        button span.filter-option.pull-left {
+            color:white;
         }
     </style>
     <title>IdéesCulture - DataAnalyzer</title>
@@ -114,28 +140,6 @@
                     }
                 }
 
-                function displayFile($file, $index, $state) {
-
-                    $path_parts = pathinfo($file);
-                    if($path_parts['extension'] == 'xlsx') {
-                        $filename = basename($file);
-
-                    $filename = basename($file);
-
-                    echo '<li class="list-group-item">';
-                    echo '<form>';
-                    echo $index.'-';
-                    echo '<a href="analyze.php?file='.$file.'">'.$filename.'</a>';
-                    echo '<select class="selectpicker show-menu-arrow pull-right state" data-style="btn-primary" data-width="150px" title="'.$state.'" id="'.$file.'">
-                            <option>-</option>
-                            <option data-icon="glyphicon glyphicon-ok-circle">Ok</option>
-                            <option data-icon="glyphicon-warning-sign">Warning</option>
-                            <option data-icon="glyphicon-ban-circle">Stop</option>
-                        </select>';
-                        echo '</form>';
-                        echo '</li>';
-                    }
-                }
             ?>
         </ul>
     </div>
