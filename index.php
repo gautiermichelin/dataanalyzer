@@ -55,7 +55,7 @@
         return $array;
     }
 
-    function displayFile($file, $index, $state) {
+    function displayFile($file, $state) {
 
         $path_parts = pathinfo($file);
         if($path_parts['extension'] == 'xlsx') {
@@ -65,7 +65,7 @@
 
             echo '<li class="list-group-item">';
             echo '<form>';
-            echo $index.'-';
+
             echo '<a href="analyze.php?file='.$file.'">'.$filename.'</a>';
             echo '<select class="selectpicker show-menu-arrow pull-right state" data-style="btn-primary" data-width="150px" title="'.$state.'" id="'.$file.'">
                             <option>-</option>
@@ -119,6 +119,7 @@
                 //
                 $previous = '.';
 
+                $index=0;
                 foreach ($states as $key => $fileDescriptor) {
                     $fileDescriptor = json_decode($fileDescriptor);
 
@@ -129,15 +130,17 @@
                     // Check if in the same directory
                     if($previous == $fileDir) {
                         $filename = basename($file);
-                        displayFile($file, $key, $state);
+                        displayFile($file, $state);
 
                     } else {
                         echo '</ul>';
                         echo '<ul class="list-unstyled list-group">';
                         echo '<h3><small>'.$fileDir.'</small></h3>';
-                        displayFile($file, $key, $state);
+                        displayFile($file, $state);
                         $previous = $fileDir;
+                        $index++;
                     }
+
                 }
 
             ?>
