@@ -4,6 +4,15 @@
     ini_set(memory_limit, "4096M");
     ini_set(max_execution_time, "6000");
 
+    // Creating an array with the files to examine
+    $data = json_decode(file_get_contents("data.json"), 1);
+    $files = [];
+    foreach($data as $filename=>$file) {
+        if($file["state"] == "A migrer") {
+            $files[] = $filename;
+        }
+    }
+
     function makelink($text) {
         $text = preg_replace("#[[:punct:]]#", "", $text);
         $text = preg_replace("#\s#", "_", $text);
@@ -32,6 +41,9 @@
     $resultat = traverse_hierarchy("donnees", array("xlsx"));
     $headers = [];
     foreach($resultat as $filename) {
+        if(!in_array($filename, $files)) {
+            continue;
+        }
         $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
         $spreadsheet = $reader->load($filename);
 
@@ -48,5 +60,11 @@
         }
         $headers[$filename] = $header;
         $path_parts = pathinfo($filename);
-        file_put_contents($path_parts["dirname"]."/".$path_parts["filename"]."_headers.json", json_encode($header));
+        if(in_array($filename, $files)) {
+            file_put_contents($path_parts["dirname"]."/".$path_parts["filename"]."_headers.json", json_encode($header));
+        } else {
+            unlink($path_parts["dirname"]."/".$path_parts["filename"]."_headers.json");
+        }
+
+
     }
