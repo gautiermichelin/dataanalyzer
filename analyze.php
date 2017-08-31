@@ -1,6 +1,8 @@
 <?php
     include_once("vendor/autoload.php");
     error_reporting(E_ERROR);
+    ini_set("memory_limit", "1536M");
+    ini_set("max_execution_time", "6000");    
 
     function makelink($text) {
         $text = preg_replace("#[[:punct:]]#", "", $text);
@@ -8,7 +10,17 @@
         $text = strtolower($text);
         return $text;
     }
-    
+
+    function numeroColonne($num) {
+        $num++;
+        do {
+            $val = ($num % 26) ?: 26;
+            $num = ($num - $val) / 26;
+            $b26 = chr($val + 64).($b26 ?: '');
+        } while (0 < $num);
+        return $b26;
+    }
+
     function doubleToString($number) {
         return strval($number);
     }
@@ -19,11 +31,25 @@
 
     $filename = $_GET['file']; //"FICHIER-LEQUIN-xls.xlsx";
 
-    $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
-    $spreadsheet = $reader->load($filename);
-
-    $sheet = $spreadsheet->getSheet(0);
-    $sheet_array = $sheet->toArray();
+	$file_info = pathinfo($filename);
+	if($file_info["extension"] == "xlsx") {
+	    $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
+	    $spreadsheet = $reader->load($filename);
+	
+	    $sheet = $spreadsheet->getSheet(0);
+	    $sheet_array = $sheet->toArray();
+	} elseif($file_info["extension"] == "csv") {
+		$fileHandle = fopen($filename, "r");
+		//Loop through the CSV rows.
+		$rownum=0;
+		$sheet_array = [];
+		while (($row = fgetcsv($fileHandle, 0, ",")) !== FALSE) {
+			foreach($row as $numcell=>$cell) {
+				$sheet_array[$rownum][$numcell] = $cell;
+			}
+			$rownum++;
+		}
+	}
     //var_dump($sheet_array);
     $header = array_shift($sheet_array);
     //var_dump($header);
@@ -61,7 +87,7 @@
     <p><?php print $num_records; ?> enregistrements, <?php print count($header); ?> colonnes :</p>
 <?php
     foreach($header as $ref=>$column) {
-        print "<div class=\"col-md-2\"><small>".chr($ref+65)."</small> <a href='#".makelink($column)."'>".$column."</a></div>";
+        print "<div class=\"col-md-2\"><small>".numeroColonne($ref)."</small> <a href='#".makelink($column)."'>".$column."</a></div>";
     }
 ?>
         <div style="clear:both;"></div>
@@ -79,7 +105,7 @@
                 <?php
 
                     foreach($header as $ref=>$column) {
-                        print "<th>".chr($ref+65)."</th>";
+                        print "<th>".numeroColonne($ref)."</th>";
                     }
                 ?>
             </tr>
@@ -113,7 +139,7 @@
         print "<hr/>";
 
         print "<div class=\"container\">\n";
-        print "<h3 id='".makelink($column)."' style='width: 100%;'><small>".chr($ref+65)."</small> ".$column."<span class='pull-right'><a href='#body'>↑</a></span></h3>\n";
+        print "<h3 id='".makelink($column)."' style='width: 100%;'><small>".numeroColonne($ref)."</small> ".$column."<span class='pull-right'><a href='#body'>↑</a></span></h3>\n";
 
         $values = array_count_values($$column);
 

@@ -2,6 +2,7 @@
     include_once("vendor/autoload.php");
     error_reporting(E_ERROR);
 
+
     $base_directory = 'donnees';
     $data_file = 'data.json';
 
@@ -58,12 +59,14 @@
     function displayFile($file, $state) {
 
         $path_parts = pathinfo($file);
-        if($path_parts['extension'] == 'xlsx') {
+        if(in_array($path_parts['extension'], array('xlsx','csv'))) {
             $filename = basename($file);
             $uniqueId = md5($file);
             ?>
             <li class="list-group-item">
             <form>
+                <a class="minibtn" href="<?php print $file; ?>"><i class="glyphicon glyphicon-download
+"></i></a>
                 <?php if ($state =="A migrer" || $state == "En attente") : ?>
                 <a href="analyze.php?file=<?php print $file; ?>"><?php print $filename; ?> </a><span class="label label-info">Analyse disponible</span>
                 <?php else : ?>
@@ -132,6 +135,11 @@
         li.ne_pas_migrer {
             background-color:RGBA(0, 0, 0, 0.10);
             color:RGBA(0, 0, 0, 0.40);
+        }
+        .minibtn {
+            border-radius:4px;
+            font-size:14px;
+            padding:2px 2px;
         }
     </style>
     <title>IdéesCulture - DataAnalyzer</title>

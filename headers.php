@@ -124,6 +124,7 @@
 
     $(document).ready(function() {
         $('.datatable').DataTable( {
+            lengthChange : true,
             dom: 'Bfrtip',
             buttons: [
                 'csv', 'excel', 'pdf', 'print'
