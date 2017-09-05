@@ -55,5 +55,7 @@
     $content = preg_replace($pattern_start."\)".$pattern_end, $replacement, $content)."\n";
     $content = preg_replace($pattern_start."\)".$pattern_end, $replacement, $content)."\n";
     $content = preg_replace($pattern_start."\)".$pattern_end, $replacement, $content)."\n";
-    file_put_contents($argv[2], $content);
+    file_put_contents("temp.xml", $content);
+    exec("xmllint --format temp.xml > ".$argv[2]);
+    unlink("temp.xml");
 
