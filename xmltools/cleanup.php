@@ -9,9 +9,6 @@
      * This file : created on 05/09/2017 (16:37) by Gautier MICHELIN, gm@ideesculture.com
      * Contributions by : (add your name here, separated with commas)
      */
-     
-    require_once("ForceUTF8/Encoding.php");
-	use \ForceUTF8\Encoding;
 
     function stripInvalidXml($value) {
         $ret = "";
