@@ -49,7 +49,9 @@
 			}
 			$rownum++;
 		}
-	}
+	} elseif($file_info["extension"] == "json") {
+        //json_decode(file())
+    }
     //var_dump($sheet_array);
     $header = array_shift($sheet_array);
     //var_dump($header);
