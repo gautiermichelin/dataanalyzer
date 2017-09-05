@@ -7,3 +7,5 @@ It mainly is a collection of tools to work on data tables (CSV, XLSX, XML), esta
 This collection of programs have been developed to answer a challenge involved by the software move from different databases to Ishtar, an opensource platform for archeology, developed by Iggdrasil. We have been endorsed for this project by the DRASSM (France — Ministère de la culture).
 
 The code base aims to endorse new challenge and projects, thinking around CollectiveAccess data import and GLAM databases.
+
+Licence : GNU GPL v3.
